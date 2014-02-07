@@ -1,0 +1,63 @@
+{% extends "rango/base.html" %}
+
+	{% block title %}{{ category }}{% endblock %}
+
+	{% block content %}
+	<div class="col-sm-8">
+		<div class="row">
+			<div class="jumbotron">
+			{% if category_valid %}
+				<h2>{{ category }}</h2>
+				{% if pages %}
+				<ul>
+					{% for page in pages %}
+					<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<strong>No pages currently in category</strong><br>
+				{% endif %}
+				<a href="/rango/category/{{ category_name_url }}/add_page">Add a page</a><br>
+			{% else %}
+				<span style="color: red;">The specified category {{ category }} does not exist</span><br>
+				{% endif %}
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-8">
+		<div class="row">
+			<div class="jumbotron">
+
+				<h4>Search for a page</h4>
+				<form role="search" id="user_form" method="post" action="/rango/category/{{ category }}/">
+					<div class="form-group">
+						<div class="input-group">
+						{% csrf_token %}
+					   		<input type="text" class="form-control" name="query" id="query" placeholder="Search"/>
+					   		<span class="input-group-btn">
+					   			<button type="submit" class="btn btn-primary">
+					   				<span class="glyphicon glyphicon-search"></span>
+					   			</button>
+					   		</span>
+					   	</div>
+					</div>
+				</form>
+				<br>
+				{% if result_list %}
+				<div>
+					<ol>
+						{% for result in result_list %}
+							<li>
+								<strong><a href="{{ result.link }}">{{ result.title }}</a></strong>
+								<em>{{ result.summary }}</em>
+							</li>
+						{% endfor %}
+					</ol>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endblock %}

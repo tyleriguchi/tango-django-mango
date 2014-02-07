@@ -1,0 +1,42 @@
+{% extends "rango/base.html" %}
+
+	{% block content %}
+		
+	<div class="col-sm-8">
+		<div class="row">
+			<div class="jumbotron">
+				{% if user.is_authenticated %}
+					<h2>Rango says hi {{ user.username}}!</h2>
+				{% else %}
+					<h2>Rango says word</h2>
+				{% endif %}
+			</div>
+
+			<div class="col-sm-6">
+				<h2>Top Five Categories</h2>
+				{% if categories %}
+					<ul>
+						{% for category in categories %}
+						<li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<strong>There are no categories present.</strong>
+				{% endif %}
+			</div>
+
+			<div class="col-sm-6">
+				<h2>Top Five Sites</h2>
+				{% if pages %}
+					<ul>
+						{% for page in pages %}
+						<li><a href="{{ page.url }}">{{ page.title }}</a> ({{ page.views }} view{{ page.views | pluralize }})</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<strong>There are no pages present.</strong>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endblock %}

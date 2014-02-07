@@ -1,0 +1,40 @@
+{% extends 'rango/base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+<div class="col-sm-8">
+	<div class="row">
+		<div class="jumbotron">
+			<form role="search" id="user_form" method="post" action="/rango/search/">
+				<div class="form-group">
+					<div class="input-group">
+					{% csrf_token %}
+				   		<input type="text" class="form-control" name="query" id="query" placeholder="Search"/>
+				   		<span class="input-group-btn">
+				   			<button type="submit" class="btn btn-primary">
+				   				<span class="glyphicon glyphicon-search"></span>
+				   			</button>
+				   		</span>
+				   	</div>
+				</div>
+			</form>
+			<br>
+			{% if result_list %}
+			<div>
+				<ol>
+					{% for result in result_list %}
+						<li>
+							<strong><a href="{{ result.link }}">{{ result.title }}</a></strong>
+							<em>{{ result.summary }}</em>
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}

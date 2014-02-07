@@ -1,0 +1,58 @@
+{% extends "rango/base.html" %}
+	{% block title %}Register with Rango{% endblock %}
+
+	{% block content %}
+	{% if registered %}
+		Rango says: <strong>Thanks for registering</strong>
+		<a href="/rango/">Return to homepage</a>
+	{% else %}
+	<div class="col-sm-8">
+		<div class="row">
+			<div class="jumbotron">
+				<h2> Register with Rango</h2>
+
+				<form role="form" method="post" action="/rango/register/" enctype="multipart/form-data">
+				{% csrf_token %}
+
+				{% for field in user_form.visible_fields %}
+				<fieldset class="form-group">
+					{% if field.name != "password" %}
+					<div class="form-group">
+						{{ field.errors }}
+						<label for="help" >{{ field.help_text }}:</label>
+						<input type="text" class="form-control" name="{{field.name}}" placeholder="{{field.name |title}}"/>
+					</div>
+					{% else %}
+					<div class="form-group">
+						{{ field.errors }}
+						<label for="help" >{{ field.help_text }}:</label>
+						<input type="password" class="form-control" name="{{field.name}}" placeholder="{{field.name |title}}"/>
+					</div>
+					{% endif %}
+				</fieldset>
+				{% endfor %}
+
+				{% for field in profile_form.visible_fields %}
+				<fieldset class="form-group">
+					{% if field.name != "picture" %}
+					<div class="form-group">
+						{{ field.errors }}
+						<label for="help">{{ field.help_text}}:</label>
+						<input type="text" class="form-control" name="{{field.name}}" placeholder="{{ field.name|title }}"/>
+					</div>
+					{% else %}
+					<div class="form-group">
+						{{ field.errors }}
+						<label for="help">{{ field.help_text}}:</label>
+						<input type="file" id="file"/>
+					{% endif %}
+				</fieldset>
+				{% endfor %}
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% endblock %}

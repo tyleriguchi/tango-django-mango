@@ -1,0 +1,32 @@
+<div class="col-sm-4 pull-right">
+	<h3>Categories</h3>
+	<form role="search" id="user_form" method="post" action="/rango/category/{{result.url}}">
+		<div class="form-group">
+			<div class="input-group">
+			{% csrf_token %}
+		   		<input type="text" class="form-control" name="query" id="query" placeholder="Search"/>
+		   		<span class="input-group-btn">
+		   			<button type="submit" class="btn btn-primary">
+		   				<span class="glyphicon glyphicon-search"></span>
+		   			</button>
+		   		</span>
+		   	</div>
+		</div>
+	</form>
+	{% if result %}
+		<a href="/rango/category/{{result.url}}/">{{ result.name }}</a>
+	{% else %}
+		{% if cat_list %}
+			<ul>
+				{% for cat in cat_list %}
+				<li><a href="/rango/category/{{ cat.url }}/">{{ cat.name }}</a></li>
+				{% endfor %}
+			</ul>
+
+		{% else %}
+			<span>
+				Category list failed to load
+			</span>
+		{% endif %}
+	{% endif %}
+</div>
