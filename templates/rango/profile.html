@@ -22,6 +22,9 @@
 						<label>Edit website:</label>
 						<input type="text" class="form-control" name="{{user_website}}" value="{{user_website}}"/>
 					</div>
+					{% if user_picture %}
+						<img src="media/user_pictures/{{user_picture}}" alt="avatar"></img>
+					{% endif %}
 					<div class="form-group">
 						<label>Edit picture:</label>
 						<input type="file" name="{{user_picture}}" value="{{user_picture}}"/>

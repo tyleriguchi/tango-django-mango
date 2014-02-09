@@ -11,7 +11,7 @@
 				{% if pages %}
 				<ul>
 					{% for page in pages %}
-					<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+					<li><a href="/rango/goto/?page_id={{ page.id }}/">{{ page.title }} ({{ page.views}} view{{page.views | pluralize}})</a></li>
 					{% endfor %}
 				</ul>
 				{% else %}

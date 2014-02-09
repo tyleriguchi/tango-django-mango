@@ -9,6 +9,7 @@ from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.bing_search import run_query
 
 from datetime import datetime
+import logging
 
 def index(request):
     context = RequestContext(request)
@@ -59,7 +60,7 @@ def category(request, category_name_url):
                     }
     try:
         category = Category.objects.get(name=category_name)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
 
@@ -67,12 +68,13 @@ def category(request, category_name_url):
         pass
 
     if request.method == "POST":
-        query = request.POST['query'].strip()
+        if 'query' in request.POST:
+            query = request.POST['query'].strip()
 
-        if query:
-            result_list = run_query(query)
-            context_dict['result_list'] = result_list
-            return render_to_response('rango/category.html', context_dict, context)
+            if query:
+                result_list = run_query(query)
+                context_dict['result_list'] = result_list
+                return render_to_response('rango/category.html', context_dict, context)
 
     return render_to_response('rango/category.html', context_dict, context)
 
@@ -141,7 +143,7 @@ def register(request):
 
     if request.method == "POST":
         user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST, files=request.FILES)
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
@@ -153,7 +155,7 @@ def register(request):
             profile.user = user
 
             if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
+                profile.picture = request.FILES.get['picture', None]
 
             profile.save()
             registered = True
@@ -205,6 +207,18 @@ def search(request):
             result_list = run_query(query)
 
     return render_to_response('rango/search.html', {'result_list': result_list, 'cat_list': get_category_list}, context)
+
+def track_url(request, page_id=None):
+    context = RequestContext(request)
+
+    if request.method == "GET":
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id'].strip('/')
+            page = Page.objects.get(id__exact=page_id)
+            page.views += 1
+            page.save()
+            return HttpResponseRedirect(page.url)
+    return HttpResponseRedirect('/rango/')
 
 @login_required
 def profile(request):
